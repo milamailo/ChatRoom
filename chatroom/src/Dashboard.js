@@ -56,12 +56,12 @@ export default function Bashboard() {
     const classes = useStyles();
 
     // CTX store
-    const [allChats] = React.useContext(CTX);
+    const {allChats, sendChatAction, user} = React.useContext(CTX);
     //console.log({allChats}); 
     const topics = Object.keys(allChats);
 
     // Local state
-    const [activeTapic, changeActiveTopic] = React.useState(topics[0])
+    const [activeTapic, changeActiveTopic] = React.useState(topics[0]);
 
     const [textValue, changeTextValue] = React.useState('');
     return (
@@ -92,7 +92,7 @@ export default function Bashboard() {
                             allChats[activeTapic].map((chat, i) => (
                                 <div className={classes.flex} key={i}>
                                     <Chip label={chat.from} className={classes.chip} />
-                                    <Typography variant='p'>
+                                    <Typography variant='body1'>
                                         {chat.msg}
                                     </Typography>
                                 </div>
@@ -102,13 +102,20 @@ export default function Bashboard() {
                 </div>
                 <div className={classes.flex}>
                     <TextField
-                        id="standard-name"
                         label="Send a chat"
                         className={classes.chatBox}
                         value={textValue}
                         onChange={event => changeTextValue(event.target.value)}
                     />
-                    <Button variant="contained" color="primary">
+                    <Button 
+                        variant="contained" 
+                        color="primary"
+                        className={classes.button}
+                        onClick={() => {
+                            sendChatAction({from: user, msg: textValue, topic: activeTapic});
+                            changeTextValue('');                        
+                        }}
+                        >
                         Send
                     </Button>
                 </div>
