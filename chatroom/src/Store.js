@@ -17,6 +17,12 @@ export const CTX = React.createContext();
     }
 */
 
+//////////////////////////////////
+    // fetch('http://localhost:3002/chatRoom/')
+    // .then(res => res.json())
+    // .then(data => console.log(data));
+/////////////////////////////////
+
 const initState = {
     General: [
         { from: 'Milad', msg: 'hi' },
@@ -33,6 +39,7 @@ function reducer(state, action) {
     console.log('reducer');
     console.log(state);
 
+
     switch (action.type) {
         case 'RECEIVE_MESSAGE':
             return {
@@ -48,9 +55,16 @@ function reducer(state, action) {
 }
 
 let socket;
-
+let userNamelo;
+let user = Math.round(Math.random(100).toFixed(2) * 100);
 function sendChatAction(value) {
     socket.emit('chat message', value);
+    //console.log('sendChatAction --------> ' + value);
+}
+
+function getUserName(userName) {
+    console.log('getUserName --------> ' + this.userName);
+    userNamelo = userName;
 }
 
 export default function Store(props) {
@@ -64,14 +78,23 @@ export default function Store(props) {
         socket = io(':3001');
         socket.on('chat message', function (msg) {
             console.log(msg);
+            //getUserName(user);
             dispatch({ type: 'RECEIVE_MESSAGE', payload: msg });
         });
     }
 
-    const user = 'user ' + (Math.random(100).toFixed(2) * 100);
+    
+    if(!user) {
+        user = Math.round(Math.random(100).toFixed(2) * 100);
+    }
+    else {
+
+    }
+    
+    // const user = userNamelo;
 
     return (
-        <CTX.Provider value={{ allChats, sendChatAction, user }}>
+        <CTX.Provider value={{ allChats, sendChatAction, user, getUserName}}>
             {props.children}
         </CTX.Provider>
     );

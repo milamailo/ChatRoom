@@ -105,14 +105,17 @@ export default function Bashboard() {
     const classes = useStyles();
 
     // CTX store
-    const { allChats, sendChatAction, user } = React.useContext(CTX);
+    const { allChats, sendChatAction, user, getUserName } = React.useContext(CTX);
     //console.log({allChats}); 
     const topics = Object.keys(allChats);
-
+    
     // Local state
     const [activeTapic, changeActiveTopic] = React.useState(topics[0]);
 
     const [textValue, changeTextValue] = React.useState('');
+    const [userValue, changeUserValue] = React.useState('');
+
+
     // console.log('Bashboard');  
     // console.log(allChats);   
     return (
@@ -128,63 +131,74 @@ export default function Bashboard() {
                     </Typography>
                 </Paper>
                 <Paper className={classes.root_2} elevation={10}>
-                <div className={classes.flex}>
+                    <div className={classes.flex}>
 
-                    <div className={classes.topicsWindow}>
-                        <List>
+                        <div className={classes.topicsWindow}>
+                            <List>
+                                {
+                                    topics.map(topic => (
+                                        <ListItem onClick={event => changeActiveTopic(event.target.innerText)} key={topic} button>
+                                            <ListItemText primary={topic} />
+                                        </ListItem>
+
+                                    ))
+
+                                }
+                            </List>
+                        </div>
+
+                        <Paper className={classes.chatWindow} elevation={3}>
+
                             {
-                                topics.map(topic => (
-                                    <ListItem onClick={event => changeActiveTopic(event.target.innerText)} key={topic} button>
-                                        <ListItemText primary={topic} />
-                                    </ListItem>
-
+                                allChats[activeTapic].map((chat, i) => (
+                                    <div className={classes.flex_1} key={i}>
+                                        <Chip label={chat.from} className={classes.chip} />
+                                        <Typography variant='body1'>
+                                            {chat.msg}
+                                        </Typography>
+                                    </div>
                                 ))
-
                             }
-                        </List>
+                        </Paper>
                     </div>
+                    <div className={classes.flex}>
+                        <Paper className={classes.emptyBox} elevation={3}>
+                            <Typography variant='body1'>
+                                
+                                <TextField
+                                    color='secondary'
+                                    label="User Name"
+                                    className={classes.chatBox}
+                                    
+                                    value={userValue || user}
+                                    onChange={event => changeUserValue(event.target.value)} />
 
-                    <Paper className={classes.chatWindow} elevation={3}>
-                        
-                        {
-                            allChats[activeTapic].map((chat, i) => (
-                                <div className={classes.flex_1} key={i}>
-                                    <Chip label={chat.from} className={classes.chip} />
-                                    <Typography variant='body1'>
-                                        {chat.msg}
-                                    </Typography>
-                                </div>
-                            ))
-                        }
-                    </Paper>
-                </div>
-                <div className={classes.flex}>
-                    <Paper className={classes.emptyBox} elevation={3}>
-                        <Typography variant='body1'>
-                            copy right by Mahdi and Ali
-                        </Typography>
-                    </Paper>
-                    <TextField
-                        color='secondary'
-                        label="Send a chat"
-                        className={classes.chatBox}
-                        value={textValue}
-                        onChange={event => changeTextValue(event.target.value)}
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        onClick={() => {
-                            sendChatAction({ from: user, msg: textValue, topic: activeTapic });
-                            changeTextValue('');
-                            // console.log('Button');    
-                            // console.log(allChats);                  
-                        }}
-                    >
-                        Send
+                                {/* copy right by Mahdi and Ali */}
+                            </Typography>
+                        </Paper>
+                        <TextField
+                            color='secondary'
+                            label="Send a chat"
+                            className={classes.chatBox}
+                            value={textValue}
+                            onChange={event => changeTextValue(event.target.value)}
+                        />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            className={classes.button}
+                            onClick={() => {
+                                sendChatAction({ from: user, msg: textValue, topic: activeTapic });
+                                // getUserName(userName);
+                                changeTextValue('');
+                                changeUserValue(user);
+                                // console.log('Button');    
+                                // console.log(allChats);                  
+                            }}
+                        >
+                            Send
                     </Button>
-                </div>
+                    </div>
                 </Paper>
             </Paper>
 
