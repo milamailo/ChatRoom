@@ -108,7 +108,7 @@ export default function Bashboard() {
     const { allChats, sendChatAction, user, getUserName } = React.useContext(CTX);
     //console.log({allChats}); 
     const topics = Object.keys(allChats);
-    
+
     // Local state
     const [activeTapic, changeActiveTopic] = React.useState(topics[0]);
 
@@ -152,7 +152,7 @@ export default function Bashboard() {
                             {
                                 allChats[activeTapic].map((chat, i) => (
                                     <div className={classes.flex_1} key={i}>
-                                        <Chip label={chat.from} className={classes.chip} />
+                                        <Chip label={'user' + chat.from} className={classes.chip} />
                                         <Typography variant='body1'>
                                             {chat.msg}
                                         </Typography>
@@ -164,14 +164,17 @@ export default function Bashboard() {
                     <div className={classes.flex}>
                         <Paper className={classes.emptyBox} elevation={3}>
                             <Typography variant='body1'>
-                                
+
                                 <TextField
                                     color='secondary'
                                     label="User Name"
                                     className={classes.chatBox}
-                                    
-                                    value={userValue || user}
-                                    onChange={event => changeUserValue(event.target.value)} />
+
+                                    value={'user' + user}
+                                    onChange={event => changeUserValue(event.target.value)}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }} />
 
                                 {/* copy right by Mahdi and Ali */}
                             </Typography>
